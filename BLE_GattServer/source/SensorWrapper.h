@@ -24,14 +24,17 @@ public:
   }
 
   void update() {
+    // float
     _temp_value = BSP_TSENSOR_ReadTemp();
     _humidity_value = BSP_HSENSOR_ReadHumidity();
     _pressure_value = BSP_PSENSOR_ReadPressure();
 
-    // TODO, 
-    // BSP_MAGNETO_GetXYZ(pMagnetoXYZ);
-    // BSP_GYRO_GetXYZ(pGyroXYZ);
-    // BSP_ACCELERO_AccGetXYZ(pAcceleroXYZ);
+    // int16_t xyz
+    BSP_MAGNETO_GetXYZ(_pMagnetoXYZ);
+    BSP_ACCELERO_AccGetXYZ(_pAcceleroXYZ);
+
+    // Float xyz
+    BSP_GYRO_GetXYZ(_pGyroXYZ);
   }
 
   // Should be array of size 2
@@ -39,16 +42,24 @@ public:
   void getHumidity(uint8_t dst[2]) { convertFloatToUint8(_humidity_value, dst);}
   void getPressure(uint8_t dst[2]) { convertFloatToUint8(_pressure_value, dst);}
 
+  // int16 (xyz) -> uint8 arr
+  void getMagneto(uint8_t dst[6]);
+  void getAccelero(uint8_t dst[6]);
+
+  // float (xyz) -> uint8 arr
+  void getGyro(uint8_t dst[6]);
+
 private:
   void convertFloatToUint8(float value, uint8_t dst[2]);
+  void convertInt16toUint8(int16_t value, uint8_t dst[2]);
 
 private:
   float _temp_value = 0;
   float _humidity_value = 0;
   float _pressure_value = 0;
 
-  // TODO, 
-  int16_t pMagnetoXYZ[3] = {0};
-  float pGyroXYZ[3] = {0};
-  int16_t pAcceleroXYZ[3] = {0};
+  int16_t _pMagnetoXYZ[3] = {0};
+  int16_t _pAcceleroXYZ[3] = {0};
+
+  float _pGyroXYZ[3] = {0};
 };

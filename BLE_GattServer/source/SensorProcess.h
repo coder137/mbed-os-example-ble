@@ -21,7 +21,13 @@
 #define TEMP_CHARACTERISTIC_ID "12345678-030e-485f-b122-f8f381aa84ed"
 #define HUMIDITY_CHARACTERISTIC_ID "23456789-030e-485f-b122-f8f381aa84ed"
 #define PRESSURE_CHARACTERISTIC_ID "3456789a-030e-485f-b122-f8f381aa84ed"
+
+#define MAGNETO_CHARACTERISTIC_ID "456789ab-030e-485f-b122-f8f381aa84ed"
+#define ACCELERO_CHARACTERISTIC_ID "56789abc-030e-485f-b122-f8f381aa84ed"
+#define GYRO_CHARACTERISTIC_ID "6789abcd-030e-485f-b122-f8f381aa84ed"
+
 #define SENSOR_SERVICE_ID "51311102-030e-485f-b122-f8f381aa84ed"
+#define SENSOR_CHARACTERISTIC_LENGTH 6
 
 class SensorService {
     typedef SensorService Self;
@@ -31,7 +37,10 @@ public:
         _temperature_characteristic(UUID(TEMP_CHARACTERISTIC_ID), _temperature_value, 2, 2, 0x12),
         _humidity_characteristic(UUID(HUMIDITY_CHARACTERISTIC_ID), _humidity_value, 2, 2, 0x12),
         _pressure_characteristic(UUID(PRESSURE_CHARACTERISTIC_ID), _pressure_value, 2, 2, 0x12),
-        _sensor_service(UUID(SENSOR_SERVICE_ID), _sensor_characteristics, 3),
+        _magneto_characteristic(UUID(MAGNETO_CHARACTERISTIC_ID), _magneto_value, 6, 6, 0x12),
+        _accelero_characteristic(UUID(ACCELERO_CHARACTERISTIC_ID), _accelero_value, 6, 6, 0x12),
+        _gyro_characteristic(UUID(GYRO_CHARACTERISTIC_ID), _gyro_value, 6, 6, 0x12),
+        _sensor_service(UUID(SENSOR_SERVICE_ID), _sensor_characteristics, SENSOR_CHARACTERISTIC_LENGTH),
         _server(NULL),
         _event_queue(NULL)
     {
@@ -39,6 +48,10 @@ public:
         _sensor_characteristics[1] = &_humidity_characteristic;
         _sensor_characteristics[2] = &_pressure_characteristic;
 
+        _sensor_characteristics[3] = &_magneto_characteristic;
+        _sensor_characteristics[4] = &_accelero_characteristic;
+        _sensor_characteristics[5] = &_gyro_characteristic;
+        
         // TODO, Add more here
     }
 
@@ -216,12 +229,20 @@ private:
     GattCharacteristic _humidity_characteristic;
     GattCharacteristic _pressure_characteristic;
 
+    GattCharacteristic _magneto_characteristic;
+    GattCharacteristic _accelero_characteristic;
+    GattCharacteristic _gyro_characteristic;
+
     uint8_t _temperature_value[2];
     uint8_t _humidity_value[2];
     uint8_t _pressure_value[2];
 
+    uint8_t _magneto_value[6];
+    uint8_t _accelero_value[6];
+    uint8_t _gyro_value[6];
+
     // list of the characteristics of the clock service
-    GattCharacteristic* _sensor_characteristics[3]; // TODO, Increase as needed
+    GattCharacteristic* _sensor_characteristics[SENSOR_CHARACTERISTIC_LENGTH]; // TODO, Increase as needed
 
     // Service
     GattService _sensor_service;
